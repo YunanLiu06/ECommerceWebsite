@@ -2,6 +2,7 @@ package com.example.mall.api;
 
 import com.example.mall.api.param.UserLoginParam;
 import com.example.mall.api.param.UserRegisterParam;
+import com.example.mall.api.vo.UserVO;
 import com.example.mall.common.Constants;
 import com.example.mall.common.ServiceResultEnum;
 import com.example.mall.config.annotation.TokenToUser;
@@ -12,10 +13,8 @@ import com.example.mall.util.Result;
 import com.example.mall.util.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.BeanUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -74,4 +73,14 @@ public class UserAPI {
         }
         return ResultGenerator.genFailResult("logout error");
     }
+
+    @GetMapping("/user/info")
+    public Result<UserVO> getUserDetail(@TokenToUser User user){
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+
+        return ResultGenerator.genSuccessResult(userVO);
+
+    }
+
 }

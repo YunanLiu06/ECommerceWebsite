@@ -40,6 +40,9 @@ public class TokenToUserMethodArgumentResolver implements HandlerMethodArgumentR
             String token = webRequest.getHeader("token");
             if (tokenUtil.isValidToken(token)) {
                 UserToken userToken = userTokenMapper.findUserTokenByToken(token);
+                if (userToken == null) {
+                    MallException.fail(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
+                }
                 if (tokenUtil.isExpiredUserToken(userToken)) {
                     MallException.fail(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
                 }
