@@ -61,9 +61,19 @@ public class UserServiceImpl implements UserService {
                 userToken.setToken(token);
                 userToken.setUpdateTime(now);
                 userToken.setExpireTime(expireTime);
+
+                if (userTokenMapper.save(userToken) != null) {
+                    return token;
+                }
             }
         }
 
         return ServiceResultEnum.LOGIN_ERROR.getResult();
+    }
+
+    @Override
+    public Boolean logout(Long userId) {
+        userTokenMapper.deleteById(userId);
+        return true;
     }
 }

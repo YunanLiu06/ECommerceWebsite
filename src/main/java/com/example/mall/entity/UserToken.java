@@ -9,7 +9,6 @@ import java.util.Date;
 @Data
 public class UserToken {
     @Id
-    @GeneratedValue
     private Long userId;
 
     private String token;

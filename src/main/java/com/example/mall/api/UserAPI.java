@@ -4,6 +4,8 @@ import com.example.mall.api.param.UserLoginParam;
 import com.example.mall.api.param.UserRegisterParam;
 import com.example.mall.common.Constants;
 import com.example.mall.common.ServiceResultEnum;
+import com.example.mall.config.annotation.TokenToUser;
+import com.example.mall.entity.User;
 import com.example.mall.service.UserService;
 import com.example.mall.util.NumberUtil;
 import com.example.mall.util.Result;
@@ -63,7 +65,13 @@ public class UserAPI {
     }
 
     @PostMapping("/user/logout")
-    public Result<String> logout () {
+    public Result<String> logout (@TokenToUser User user) {
+        boolean logoutResult = userService.logout(user.getUserId());
+        log.info("logout api,loginMallUser={}", user.getUserId());
 
+        if (logoutResult) {
+            return ResultGenerator.genSuccessResult();
+        }
+        return ResultGenerator.genFailResult("logout error");
     }
 }

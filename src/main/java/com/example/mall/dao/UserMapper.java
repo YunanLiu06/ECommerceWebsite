@@ -7,4 +7,5 @@ public interface UserMapper extends CrudRepository<User, Long> {
     User findUserByLoginName(String loginName);
     User save(User user);
     User findUserByLoginNameAndPassword(String loginName, String password);
+    User findUserByUserId(Long userId);
 }
