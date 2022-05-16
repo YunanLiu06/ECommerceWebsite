@@ -1,12 +1,15 @@
 package com.example.mall.api;
 
+import com.example.mall.api.param.UserLoginParam;
 import com.example.mall.api.param.UserRegisterParam;
+import com.example.mall.common.Constants;
 import com.example.mall.common.ServiceResultEnum;
 import com.example.mall.service.UserService;
 import com.example.mall.util.NumberUtil;
 import com.example.mall.util.Result;
 import com.example.mall.util.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +40,30 @@ public class UserAPI {
         }
 
         return ResultGenerator.genFailResult(registerResult);
+    }
+
+    @PostMapping("/user/login")
+    public Result<String> login(@RequestBody UserLoginParam userLoginParam) {
+        if (NumberUtil.isNotPhone(userLoginParam.getLoginName())){
+            return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_NAME_IS_NOT_PHONE.getResult());
+        }
+
+        String loginResult = userService.login(userLoginParam.getLoginName(), userLoginParam.getPassword());
+
+        log.info("login api,loginName={},loginResult={}", userLoginParam.getLoginName(), loginResult);
+
+        if (StringUtils.isEmpty(loginResult) && loginResult.length() == Constants.TOKEN_LENGTH) {
+            Result result = ResultGenerator.genSuccessResult();
+            result.setData(loginResult);
+
+            return result;
+        }
+
+        return ResultGenerator.genFailResult(loginResult);
+    }
+
+    @PostMapping("/user/logout")
+    public Result<String> logout () {
+
     }
 }
