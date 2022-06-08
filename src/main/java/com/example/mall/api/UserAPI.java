@@ -2,6 +2,7 @@ package com.example.mall.api;
 
 import com.example.mall.api.param.UserLoginParam;
 import com.example.mall.api.param.UserRegisterParam;
+import com.example.mall.api.param.UserUpdateParam;
 import com.example.mall.api.vo.UserVO;
 import com.example.mall.common.Constants;
 import com.example.mall.common.ServiceResultEnum;
@@ -81,6 +82,15 @@ public class UserAPI {
 
         return ResultGenerator.genSuccessResult(userVO);
 
+    }
+
+    @PutMapping("/user/info")
+    public Result updateInfo(@RequestBody UserUpdateParam userUpdateParam, @TokenToUser User user) {
+        Boolean flag = userService.updateUserInfo(userUpdateParam, user.getUserId());
+        if (flag == true) {
+            return ResultGenerator.genSuccessResult();
+        }
+        return ResultGenerator.genFailResult("Fail to update");
     }
 
 }

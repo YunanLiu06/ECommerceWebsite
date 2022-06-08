@@ -1,5 +1,7 @@
 package com.example.mall.service.impl;
 
+import com.example.mall.api.param.UserUpdateParam;
+import com.example.mall.common.MallException;
 import com.example.mall.common.ServiceResultEnum;
 import com.example.mall.dao.UserTokenMapper;
 import com.example.mall.dao.UserMapper;
@@ -7,9 +9,11 @@ import com.example.mall.entity.User;
 import com.example.mall.entity.UserToken;
 import com.example.mall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -75,5 +79,21 @@ public class UserServiceImpl implements UserService {
     public Boolean logout(Long userId) {
         userTokenMapper.deleteById(userId);
         return true;
+    }
+
+    @Override
+    public Boolean updateUserInfo(UserUpdateParam userUpdateParam, Long userId) {
+        User user = userMapper.findUserByUserId(userId);
+        if (user == null) {
+            MallException.fail(ServiceResultEnum.DATA_NOT_EXIST.getResult());
+        }
+        user.setNickName(userUpdateParam.getNickname());
+        user.setPassword(userUpdateParam.getPassWord());
+        user.setIntroduceSign(userUpdateParam.getIntroduceSign());
+
+        if (userMapper.save(user) != null) {
+            return true;
+        }
+        return false;
     }
 }
